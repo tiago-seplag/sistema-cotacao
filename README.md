@@ -1,23 +1,120 @@
-# Getting Started with Create React App
+# 🏛️ Sistema de Automação de Cotação de Preços
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Sistema inteligente para automação de pesquisa e comparação de preços para processos de licitação e compras governamentais.
 
-## Available Scripts
+## 🎯 Visão Geral
 
-In the project directory, you can run:
+Este projeto é um **sistema web de cotação automática** que permite:
+
+✨ **Buscar produtos** em múltiplas fontes governamentais  
+📊 **Comparar preços** entre diferentes fornecedores  
+📈 **Agrupar produtos** do mesmo tipo automaticamente  
+💰 **Calcular médias** e valores totais  
+📥 **Exportar em Markdown** com relatório técnico
+
+## 🚀 Quick Start
+
+### Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/tiago-seplag/sistema-cotacao.git
+
+# Entre no diretório
+cd sistema-cotacao
+
+# Instale as dependências
+npm install
+```
+
+### Executar em Desenvolvimento
+
+```bash
+npm start
+```
+
+Abre [http://localhost:3000](http://localhost:3000) no navegador.
+
+## 📋 Funcionalidades Principais
+
+### 1. 🔍 **Pesquisa e Filtro**
+- Busque por nome do produto, fornecedor ou localização
+- Selecione múltiplas fontes (PNCP, Radar TCE, Nota MT, E-commerce)
+- Filtre resultados em tempo real
+
+### 2. 📦 **Seleção com Quantidade**
+- Defina quantidade para cada produto
+- Adicione à lista de cotação
+- O sistema agrupa automaticamente produtos duplicados
+
+### 3. 📊 **Agrupamento Inteligente**
+- Agrupa produtos do mesmo tipo
+- Calcula **preço médio** entre fontes
+- Calcula **valor total** (média × quantidade)
+
+### 4. 💾 **Exportação para Mapa de Preços**
+- Exporta em formato Markdown
+- Inclui tabela comparativa
+- Adiciona relatório técnico automático
+- Segue padrões de Decreto MT
+
+## 📖 Documentação
+
+- 📘 **[GUIA_FUNCIONALIDADES.md](./GUIA_FUNCIONALIDADES.md)** - Guia completo de uso
+- 📋 **[RESUMO_IMPLEMENTACOES.md](./RESUMO_IMPLEMENTACOES.md)** - Resumo técnico das mudanças
+
+## 🏗️ Arquitetura
+
+```
+src/
+├── components/
+│   ├── Header/              # Cabeçalho com usuário
+│   ├── SearchSection/       # Busca e filtros
+│   ├── SourcesSection/      # Seleção de fontes
+│   ├── ResultsSection/      # Resultados com quantidade
+│   └── SavedProducts/       # Agrupamento e exportação
+├── utils/
+│   ├── groupProducts.ts     # Lógica de agrupamento
+│   └── exportToMarkdown.ts  # Geração de Markdown
+├── types/
+│   └── index.ts             # Tipos TypeScript
+├── data/
+│   └── mockData.ts          # Dados de exemplo
+└── styles/
+    ├── globalStyles.ts
+    ├── theme.ts
+    └── styled.d.ts
+```
+
+## 🔄 Fluxo de Uso
+
+```
+1. Buscar Produtos → 2. Selecionar Quantidade → 3. Adicionar à Lista
+                                                         ↓
+                    5. Exportar Mapa ← 4. Revisar Agrupamento
+```
+
+## 📊 Exemplo de Saída
+
+```markdown
+# MAPA COMPARATIVO DE PREÇOS - COTAÇÃO AUTOMÁTICA
+
+| Item | Quantidade | PNCP | Nota MT | Radar TCE | Média | Valor Total |
+|------|-----------|------|---------|-----------|-------|------------|
+| Papel A4 75g | 10 | R$ 19,50 | R$ 18,90 | R$ 20,10 | R$ 19,50 | R$ 195,00 |
+
+| **Valor Total Aquisição** | | | | | | **R$ 195,00** |
+```
+
+## 🛠️ Scripts Disponíveis
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Executa em modo desenvolvimento.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Executa testes unitários.
 
 ### `npm run build`
 

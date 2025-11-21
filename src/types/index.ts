@@ -25,3 +25,19 @@ export interface User {
   initials: string;
   role: string;
 }
+
+export interface SavedProduct extends SearchResult {
+  quantity?: number;
+}
+
+export interface GroupedProduct {
+  productName: string;
+  quantity: number;
+  prices: Array<{
+    source: string;
+    price: number;
+    supplier: string;
+  }>;
+  averagePrice: number;
+  totalValue: number;
+}

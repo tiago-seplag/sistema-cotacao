@@ -1,6 +1,6 @@
-import styled, { useTheme } from 'styled-components';
-import { SearchResult } from '../../types';
-import { useState } from 'react';
+import styled from "styled-components";
+import { SearchResult } from "../../types";
+import { useState } from "react";
 
 const Section = styled.section`
   background-color: ${({ theme }) => theme.colors.white};
@@ -68,7 +68,7 @@ const SourceBadge = styled.span`
 
 const ActionButton = styled.button<{ primary?: boolean }>`
   background: ${({ theme, primary }) =>
-    primary ? theme.colors.primary : 'none'};
+    primary ? theme.colors.primary : "none"};
   color: ${({ theme, primary }) =>
     primary ? theme.colors.white : theme.colors.dark};
   border: 1px solid
@@ -78,13 +78,14 @@ const ActionButton = styled.button<{ primary?: boolean }>`
   padding: 5px ${({ theme }) => theme.spacing.sm};
   font-size: 12px;
   margin-right: ${({ theme }) => theme.spacing.xs};
+  cursor: pointer;
 `;
 
 interface ResultsSectionProps {
   results: SearchResult[];
   savedProducts: SearchResult[];
   onExport: () => void;
-  onAdd: (resultId: string) => void;
+  onAdd: (resultId: string, quantity: number) => void;
   onDetails: (resultId: string) => void;
 }
 
@@ -95,7 +96,6 @@ export const ResultsSection = ({
   onAdd,
   onDetails,
 }: ResultsSectionProps) => {
-  const theme = useTheme();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(results.length / itemsPerPage);
@@ -115,9 +115,8 @@ export const ResultsSection = ({
     border: 1px solid ${({ theme }) => theme.colors.border};
     border-radius: ${({ theme }) => theme.borderRadius.small};
     background-color: ${({ theme, active }) =>
-      active ? theme.colors.primary : 'white'};
-    color: ${({ theme, active }) =>
-      active ? 'white' : theme.colors.dark};
+      active ? theme.colors.primary : "white"};
+    color: ${({ theme, active }) => (active ? "white" : theme.colors.dark)};
     cursor: pointer;
 
     &:hover {
@@ -165,44 +164,48 @@ export const ResultsSection = ({
           </tr>
         </thead>
         <tbody>
-          {paginatedResults.map((result) => (
-            <tr key={result.id}>
-              <Td>{result.productName}</Td>
-              <Td>{result.supplier}</Td>
-              <Td>
-                <Price>
-                  {result.price.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  })}
-                </Price>
-              </Td>
-              <Td>
-                <SourceBadge>{result.source}</SourceBadge>
-              </Td>
-              <Td>
-                {savedProducts.some(p => p.id === result.id) ? (
-                  <ActionButton 
-                    style={{ 
-                      backgroundColor: theme.colors.gray,
-                      color: theme.colors.white,
-                      cursor: 'default'
-                    }}
-                    disabled
-                  >
-                    Adicionado
+          {paginatedResults.map((result) => {
+            const isAdded = savedProducts.some((p) => p.id === result.id);
+            return (
+              <tr key={result.id}>
+                <Td style={{ opacity: isAdded ? 0.5 : 1 }}>{result.productName}</Td>
+                <Td style={{ opacity: isAdded ? 0.5 : 1 }}>{result.supplier}</Td>
+                <Td style={{ opacity: isAdded ? 0.5 : 1 }}>
+                  <Price>
+                    {result.price.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </Price>
+                </Td>
+                <Td style={{ opacity: isAdded ? 0.5 : 1 }}>
+                  <SourceBadge>{result.source}</SourceBadge>
+                </Td>
+                <Td>
+                  {isAdded ? (
+                    <ActionButton
+                      disabled
+                      style={{
+                        backgroundColor: "#6c757d",
+                        color: "white",
+                        cursor: "not-allowed",
+                        opacity: 0.6,
+                      }}
+                    >
+                      ✓ Adicionado
+                    </ActionButton>
+                  ) : (
+                    <ActionButton primary onClick={() => onAdd(result.id, 1)}>
+                      Adicionar
+                    </ActionButton>
+                  )}
+                  <ActionButton onClick={() => onDetails(result.id)}>
+                    Detalhes
                   </ActionButton>
-                ) : (
-                  <ActionButton primary onClick={() => onAdd(result.id)}>
-                    Adicionar
-                  </ActionButton>
-                )}
-                <ActionButton onClick={() => onDetails(result.id)}>
-                  Detalhes
-                </ActionButton>
-              </Td>
-            </tr>
-          ))}
+                </Td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
 
@@ -214,24 +217,26 @@ export const ResultsSection = ({
           >
             Anterior
           </PaginationButton>
-          
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-            <PaginationButton
-              key={page}
-              active={page === currentPage}
-              onClick={() => handlePageChange(page)}
-            >
-              {page}
-            </PaginationButton>
-          ))}
-          
+
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <PaginationButton
+                key={page}
+                active={page === currentPage}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </PaginationButton>
+            )
+          )}
+
           <PaginationButton
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
             Próxima
           </PaginationButton>
-          
+
           <PageInfo>
             Página {currentPage} de {totalPages}
           </PageInfo>

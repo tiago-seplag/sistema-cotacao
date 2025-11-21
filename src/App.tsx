@@ -60,7 +60,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("1"); // Default to 'Produto'
   const [results] = useState<SearchResult[]>(initialResults);
-  const [savedProducts, setSavedProducts] = useState<SearchResult[]>([]);
+  const [savedProducts, setSavedProducts] = useState<(SearchResult & { quantity?: number })[]>([]);
 
   // Filter results based on search query and active filter
   const filteredResults = React.useMemo(() => {
@@ -134,12 +134,13 @@ function App() {
     // Implement export logic here
   };
 
-  const handleAdd = (resultId: string) => {
+  const handleAdd = (resultId: string, quantity: number = 1) => {
     const productToAdd = results.find(result => result.id === resultId);
-    if (productToAdd && !savedProducts.some(p => p.id === resultId)) {
-      setSavedProducts([...savedProducts, productToAdd]);
+    if (productToAdd) {
+      // Always add as a new entry with quantity, don't merge
+      setSavedProducts([...savedProducts, { ...productToAdd, quantity }]);
       toast.success('Produto adicionado à sua lista de licitação!', {
-        description: productToAdd.productName
+        description: `${productToAdd.productName} (Qtd: ${quantity})`
       });
     }
   };
